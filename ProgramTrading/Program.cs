@@ -15,7 +15,7 @@ namespace ProgramTrading
 
             //第一步.初始化API元件
              init();
-
+            //123
             //第二步.執行連線
             MrWangConnection.Connect("127.0.0.1", 5000);
 
