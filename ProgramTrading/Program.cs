@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MrWangAPI;
-
+using NLog;
 
 namespace ProgramTrading
 {
     class Program
     {
         static MrWangConnection MrWangConnection;
+        static Logger logger = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
-
+           
             //第一步.初始化API元件
-             init();
+            init();
             //123
             //第二步.執行連線
             MrWangConnection.Connect("127.0.0.1", 5000);
@@ -84,6 +85,19 @@ namespace ProgramTrading
 
                 //第四步 訂閱報價
                 MrWangConnection.SubscribeQuote("TXFD9");
+
+                //產生下單物件
+                Order order = new Order()
+                {
+                    Symbol = "TXFD9",
+                    Side = SideEnum.Buy,
+                    Price = 10800,
+                    Qty = 1,
+                    OrderType = OrderTypeEnum.otLimit,
+                    TimeInForce = TimeInForceEnum.IOC,
+
+                };
+                MrWangConnection.SnedOrder(order);
             }
             else
             {
@@ -115,9 +129,9 @@ namespace ProgramTrading
         /// </summary>
         private static void MrWangConnection_OnOrderBookData(OrderBook orderBook)
         {
-            Console.WriteLine($"Symbol:{orderBook.Symbol}" +
-                $" Bid:{orderBook.BidPrice} x {orderBook.BidQty}" +
-                $" Ask:{orderBook.AskPrice} x {orderBook.AskQty}");
+            //Console.WriteLine($"Symbol:{orderBook.Symbol}" +
+            //    $" Bid:{orderBook.BidPrice} x {orderBook.BidQty}" +
+            //    $" Ask:{orderBook.AskPrice} x {orderBook.AskQty}");
         }
 
         /// <summary>
@@ -125,9 +139,14 @@ namespace ProgramTrading
         /// </summary>
         private static void MrWangConnection_OnMatchInfo(Match match)
         {
-            Console.WriteLine($"Symbol:{match.Symbol}" +
-                $" Last:{match.MatchPrice} x {match.MatchQty}" +
-                $" Volume:{match.Volume}");
+            //Console.WriteLine($"Symbol:{match.Symbol}" +
+            //    $" Last:{match.MatchPrice} x {match.MatchQty}" +
+            //    $" Volume:{match.Volume}");
+
+            logger.Info($"Symbol:{match.Symbol}" +
+               $" Last:{match.MatchPrice} x {match.MatchQty}" +
+               $" Volume:{match.Volume}");
         }
     }
+    
 }
