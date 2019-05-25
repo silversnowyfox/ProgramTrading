@@ -13,7 +13,8 @@ namespace ProgramTrading
         static Logger logger = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
-           
+            var ab = new cc123.Class1();
+            var c = ab.Sum(1.11,2.22);
             //第一步.初始化API元件
             init();
             //123
